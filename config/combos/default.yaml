@@ -1,0 +1,10 @@
+character: "default"
+combo_sequence:
+  - { action: "attack", count: 3, interval: 0.15 }
+  - { action: "skill", hold: false, duration: 0.0 }
+  - { action: "attack", count: 2, interval: 0.15 }
+priority_reactions:
+  dodge_signal: 10
+  qte_prompt: 9
+  ultimate_ready: 8
+  switch_prompt: 7

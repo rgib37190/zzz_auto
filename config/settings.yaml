@@ -1,0 +1,18 @@
+game:
+  resolution: [1920, 1080]
+  language: "zh-TW"
+
+vision:
+  ocr_confidence: 0.75
+  template_threshold: 0.80
+  screenshot_interval: 0.1
+
+input:
+  click_delay: 0.05
+  action_delay: 0.2
+  loading_timeout: 15
+
+dungeon:
+  max_stamina_usage: 240
+  hollow_zero_difficulty: 3
+  combat_sim_repeat: 6
