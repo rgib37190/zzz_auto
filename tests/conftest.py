@@ -1,3 +1,19 @@
+import os
+import sys
+from unittest.mock import MagicMock
+
+# Stub out display-dependent modules before pyautogui is imported so tests can
+# run in headless environments (e.g. WSL without an X display).
+os.environ.setdefault("DISPLAY", ":99")
+for _stub in ("mouseinfo", "Xlib", "Xlib.display", "Xlib.ext", "Xlib.X", "Xlib.XK",
+              "Xlib.protocol", "Xlib.keysymdef"):
+    if _stub not in sys.modules:
+        sys.modules[_stub] = MagicMock()
+if "pyautogui._pyautogui_x11" not in sys.modules:
+    _x11_stub = MagicMock()
+    _x11_stub._size.return_value = (1920, 1080)
+    sys.modules["pyautogui._pyautogui_x11"] = _x11_stub
+
 import pytest
 import yaml
 
