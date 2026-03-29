@@ -3,7 +3,6 @@ from typing import Optional, Tuple
 
 import cv2
 import mss
-import mss.tools
 import numpy as np
 
 from core.config import AppConfig
@@ -47,8 +46,12 @@ class VisionEngine:
         result = cv2.matchTemplate(scene, template, cv2.TM_CCORR_NORMED)
         _, max_val, _, max_loc = cv2.minMaxLoc(result)
 
+        h, w = template.shape[:2]
+
         if max_val >= threshold:
-            return (int(max_loc[0]), int(max_loc[1]), float(max_val))
+            center_x = int(max_loc[0]) + w // 2
+            center_y = int(max_loc[1]) + h // 2
+            return (center_x, center_y, float(max_val))
 
         # Fallback to grayscale
         scene_gray = cv2.cvtColor(scene, cv2.COLOR_BGR2GRAY)
@@ -57,7 +60,9 @@ class VisionEngine:
         _, max_val, _, max_loc = cv2.minMaxLoc(result)
 
         if max_val >= threshold * 0.9:  # slightly lower threshold for grayscale
-            return (int(max_loc[0]), int(max_loc[1]), float(max_val))
+            center_x = int(max_loc[0]) + w // 2
+            center_y = int(max_loc[1]) + h // 2
+            return (center_x, center_y, float(max_val))
 
         return None
 

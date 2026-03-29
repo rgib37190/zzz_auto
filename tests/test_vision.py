@@ -36,8 +36,9 @@ class TestTemplateMatching:
         result = engine.find_template(scene, template)
         assert result is not None
         x, y, confidence = result
-        assert 95 <= x <= 105
-        assert 45 <= y <= 55
+        # Template is 50x30, placed at (100,50), so center = (125, 65)
+        assert 120 <= x <= 130
+        assert 60 <= y <= 70
         assert confidence > 0.8
 
     def test_find_template_returns_none_when_not_found(self):
