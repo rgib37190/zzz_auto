@@ -45,16 +45,18 @@ class AppConfig:
         if path.exists():
             with open(path, "r", encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
-            if "game" in data:
-                config.game = GameConfig(**{**vars(config.game), **data["game"]})
-            if "vision" in data:
-                config.vision = VisionConfig(
-                    **{**vars(config.vision), **data["vision"]}
-                )
-            if "input" in data:
-                config.input = InputConfig(**{**vars(config.input), **data["input"]})
-            if "dungeon" in data:
-                config.dungeon = DungeonConfig(
-                    **{**vars(config.dungeon), **data["dungeon"]}
-                )
+            section_map = {
+                "game": (GameConfig, "game"),
+                "vision": (VisionConfig, "vision"),
+                "input": (InputConfig, "input"),
+                "dungeon": (DungeonConfig, "dungeon"),
+            }
+            for section_key, (cfg_cls, attr_name) in section_map.items():
+                if section_key in data:
+                    current = vars(getattr(config, attr_name))
+                    merged = {**current, **data[section_key]}
+                    # Filter out unknown keys
+                    valid_keys = {f.name for f in cfg_cls.__dataclass_fields__.values()}
+                    filtered = {k: v for k, v in merged.items() if k in valid_keys}
+                    setattr(config, attr_name, cfg_cls(**filtered))
         return config
